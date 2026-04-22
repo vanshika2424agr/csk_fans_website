@@ -23,9 +23,9 @@ const topPlayers = [
 ];
 
 const recentNews = [
-  { cat:'Match Report', img:'public/mumbai-owns-csk-at-chepauk-v0-95h1szg3mfrc1.webp', title:'CSK Crush Mumbai Indians by 42 Runs at Chepauk', date:'Apr 18' },
+  { cat:'Match Report', img:'/mumbai-owns-csk-at-chepauk-v0-95h1szg3mfrc1.webp', title:'CSK Crush Mumbai Indians by 42 Runs at Chepauk', date:'Apr 18' },
   { cat:'Club News', img:'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&fit=crop', title:'Dhoni Confirms Continuation as CSK Mentor for 2026', date:'Apr 12' },
-  { cat:'Team Update', img:'public/Jadeja_Rahul.webp', title:'Gaikwad Named Captain — A New Era Begins', date:'Apr 5' },
+  { cat:'Team Update', img:'/Jadeja_Rahul.webp', title:'Gaikwad Named Captain — A New Era Begins', date:'Apr 5' },
 ];
 
 export default function Home() {
