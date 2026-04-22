@@ -23,16 +23,16 @@ const topPlayers = [
 ];
 
 const recentNews = [
-  { cat:'Match Report', img:'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=600&fit=crop', title:'CSK Crush Mumbai Indians by 42 Runs at Chepauk', date:'Apr 18' },
+  { cat:'Match Report', img:'public/mumbai-owns-csk-at-chepauk-v0-95h1szg3mfrc1.webp', title:'CSK Crush Mumbai Indians by 42 Runs at Chepauk', date:'Apr 18' },
   { cat:'Club News', img:'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&fit=crop', title:'Dhoni Confirms Continuation as CSK Mentor for 2026', date:'Apr 12' },
-  { cat:'Team Update', img:'https://images.unsplash.com/photo-1624193699042-88771190bc1f?q=80&w=600&fit=crop', title:'Gaikwad Named Captain — A New Era Begins', date:'Apr 5' },
+  { cat:'Team Update', img:'public/Jadeja_Rahul.webp', title:'Gaikwad Named Captain — A New Era Begins', date:'Apr 5' },
 ];
 
 export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section style={{ position:'relative', minHeight:'90vh', display:'flex', alignItems:'center', overflow:'hidden' }}>
+      <section className="hero-section" style={{ position:'relative', minHeight:'90vh', display:'flex', alignItems:'center', overflow:'hidden' }}>
         <div style={{ position:'absolute', inset:0 }}>
           <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1800&fit=crop" alt="" style={{ width:'100%', height:'100%', objectFit:'cover', opacity:0.15 }}/>
           <div style={{ position:'absolute', inset:0, background:'var(--gradient-hero)' }}/>
@@ -84,7 +84,7 @@ export default function Home() {
         <div style={{ maxWidth:1280, margin:'0 auto', padding:'0 24px' }}>
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))' }}>
             {[['🏆','5','Titles'],['🏏','250+','Matches'],['✅','185','Wins'],['📈','58%','Win Rate'],['⚡','2008','Founded']].map(([icon,v,l],i)=>(
-              <div key={l} style={{ padding:'24px 16px', textAlign:'center', borderRight:i<4?'1px solid var(--border)':'none' }}>
+              <div key={l} className="stats-strip-item" style={{ padding:'24px 16px', textAlign:'center', borderRight:i<4?'1px solid var(--border)':'none' }}>
                 <div style={{ fontSize:'1.3rem', marginBottom:4 }}>{icon}</div>
                 <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2.2rem', color:'var(--primary)', lineHeight:1 }}>{v}</div>
                 <div style={{ fontSize:'0.62rem', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.1em', marginTop:3 }}>{l}</div>
@@ -100,7 +100,7 @@ export default function Home() {
           <div><p className="section-label">Upcoming</p><h2 className="section-title">Next Match</h2></div>
           <Link to="/schedule" className="btn-secondary" style={{ padding:'8px 18px', fontSize:'0.8rem' }}>Full Schedule →</Link>
         </div>
-        <div className="card" style={{ padding:'30px 34px', background:'var(--gradient-surface)', borderColor:'var(--border-hover)' }}>
+        <div className="card next-match-card" style={{ padding:'30px 34px', background:'var(--gradient-surface)', borderColor:'var(--border-hover)' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:22 }}>
             <span className="live-dot"/><span style={{ fontSize:'0.68rem', fontWeight:700, color:'var(--green)', letterSpacing:'0.12em', textTransform:'uppercase' }}>Apr 26, 2026 · 19:30 IST · MA Chidambaram Stadium, Chennai</span>
           </div>

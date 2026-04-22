@@ -117,7 +117,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {open && (
         <div style={{ background:'var(--surface)', borderTop:'1px solid var(--border)', padding:'12px 20px 20px' }}>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:12 }}>
+          <div className="mobile-menu-grid" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:12 }}>
             {links.map(({ to, label, icon }) => (
               <NavLink key={to} to={to} end={to==='/'} onClick={() => setOpen(false)}
                 style={({ isActive }) => ({

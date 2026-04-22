@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
 const articles = [
-  { id:1, cat:'Match Report',   date:'Apr 18, 2026', read:'5 min', img:'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=700&fit=crop', title:'CSK Crush Mumbai Indians by 42 Runs in a Chepauk Fortress Display',     body:'A blistering 89* from MS Dhoni combined with Pathirana\'s 4/18 powered CSK to a dominant victory at MA Chidambaram Stadium.' },
-  { id:2, cat:'Club News',      date:'Apr 15, 2026', read:'3 min', img:'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=700&fit=crop', title:'Dhoni Confirms Continuation as CSK Mentor and Wicketkeeper for IPL 2026', body:'Thala MS Dhoni has confirmed he will continue with CSK for the 2026 season, delighting millions of fans worldwide.' },
-  { id:3, cat:'Player Spotlight',date:'Apr 12, 2026', read:'4 min', img:'https://images.unsplash.com/photo-1624193699042-88771190bc1f?q=80&w=700&fit=crop', title:'Ruturaj Gaikwad — From Understudy to Captain, The CSK Journey',           body:'From Orange Cap winner to captaincy, Ruturaj\'s rise at CSK has been nothing short of extraordinary.' },
+  { id:1, cat:'Match Report',   date:'Apr 18, 2026', read:'5 min', img:'public/mumbai-owns-csk-at-chepauk-v0-95h1szg3mfrc1.webp', title:'CSK Crush Mumbai Indians by 42 Runs in a Chepauk Fortress Display',     body:'A blistering 89* from MS Dhoni combined with Pathirana\'s 4/18 powered CSK to a dominant victory at MA Chidambaram Stadium.' },
+  { id:2, cat:'Club News',      date:'Apr 15, 2026', read:'3 min', img:'public/123.webp', title:'Dhoni Confirms Continuation as CSK Mentor and Wicketkeeper for IPL 2026', body:'Thala MS Dhoni has confirmed he will continue with CSK for the 2026 season, delighting millions of fans worldwide.' },
+  { id:3, cat:'Player Spotlight',date:'Apr 12, 2026', read:'4 min', img:'public/OIP.webp', title:'Ruturaj Gaikwad — From Understudy to Captain, The CSK Journey',           body:'From Orange Cap winner to captaincy, Ruturaj\'s rise at CSK has been nothing short of extraordinary.' },
   { id:4, cat:'Transfer News',  date:'Apr 8, 2026',  read:'4 min', img:'https://images.unsplash.com/photo-1593341646782-e0b495cff86d?q=80&w=700&fit=crop', title:'CSK\'s Smart Retention Strategy Pays Off — IPL 2026 Auction Analysis',    body:'Retaining the core of Gaikwad, Jadeja, and Pathirana while adding strategic picks has set CSK up for another title tilt.' },
-  { id:5, cat:'Match Report',   date:'Apr 5, 2026',  read:'5 min', img:'https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=700&fit=crop', title:'Jadeja\'s All-Round Brilliance Seals Victory Against Delhi Capitals',     body:'Ravindra Jadeja scored a quickfire 52* and took 3/22 as CSK defeated DC by 6 wickets in Delhi.' },
-  { id:6, cat:'Fan Feature',    date:'Apr 1, 2026',  read:'3 min', img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=700&fit=crop', title:'Whistle Podu! Behind the Scenes at CSK\'s Biggest Fan Festival',          body:'Thousands of CSK supporters gathered at Chepauk for the annual fan festival, featuring player meet-and-greets and live entertainment.' },
+  { id:5, cat:'Match Report',   date:'Apr 5, 2026',  read:'5 min', img:'public/Jadeja_Rahul.webp', title:'Jadeja\'s All-Round Brilliance Seals Victory Against Delhi Capitals',     body:'Ravindra Jadeja scored a quickfire 52* and took 3/22 as CSK defeated DC by 6 wickets in Delhi.' },
+  { id:6, cat:'Fan Feature',    date:'Apr 1, 2026',  read:'3 min', img:'public/prem.webp', title:'Whistle Podu! Behind the Scenes at CSK\'s Biggest Fan Festival',          body:'Thousands of CSK supporters gathered at Chepauk for the annual fan festival, featuring player meet-and-greets and live entertainment.' },
 ];
 const categories = ['All','Match Report','Club News','Player Spotlight','Transfer News','Fan Feature'];
 
@@ -26,7 +26,7 @@ export default function News() {
       {list.length > 0 && (
         <div className="card" style={{ overflow:'hidden', marginBottom:32 }}>
           <div style={{ display:'grid', gridTemplateColumns:'1.3fr 1fr' }} className="hero-grid">
-            <div style={{ height:300, overflow:'hidden' }}>
+            <div className="news-featured-img" style={{ height:300, overflow:'hidden' }}>
               <img src={list[0].img} alt={list[0].title} style={{ width:'100%', height:'100%', objectFit:'cover' }}/>
             </div>
             <div style={{ padding:'28px', display:'flex', flexDirection:'column', justifyContent:'center' }}>
@@ -43,7 +43,7 @@ export default function News() {
       )}
 
       {/* Filters */}
-      <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:28 }}>
+      <div className="filter-scroll" style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:28 }}>
         {categories.map(c=>(
           <button key={c} onClick={()=>setCat(c)} style={{ padding:'7px 16px', borderRadius:99, cursor:'pointer', fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:'0.78rem', background:cat===c?'var(--primary)':'transparent', color:cat===c?'#0A1628':'var(--text-muted)', border:cat===c?'1.5px solid var(--primary)':'1.5px solid var(--border)', transition:'all 0.2s' }}>{c}</button>
         ))}

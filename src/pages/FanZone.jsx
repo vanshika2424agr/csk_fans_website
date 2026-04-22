@@ -57,10 +57,10 @@ function Countdown() {
   if (diff <= 0) return <span style={{ color:'var(--green)', fontWeight:700 }}>🟢 Match is LIVE!</span>;
   const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
   return (
-    <div style={{ display:'flex', gap:10 }}>
+    <div className="countdown-wrap" style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
       {[['Days',d],['Hours',h],['Mins',m],['Secs',s]].map(([label,val]) => (
-        <div key={label} style={{ textAlign:'center', padding:'12px 14px', background:'var(--primary-subtle)', borderRadius:12, border:'1px solid var(--border-hover)', minWidth:70 }}>
-          <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', color:'var(--primary)', lineHeight:1 }}>{String(val).padStart(2,'0')}</div>
+        <div key={label} className="countdown-box" style={{ textAlign:'center', padding:'12px 14px', background:'var(--primary-subtle)', borderRadius:12, border:'1px solid var(--border-hover)', minWidth:70 }}>
+          <div className="countdown-value" style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'2rem', color:'var(--primary)', lineHeight:1 }}>{String(val).padStart(2,'0')}</div>
           <div style={{ fontSize:'0.55rem', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.1em', marginTop:3 }}>{label}</div>
         </div>
       ))}
@@ -208,7 +208,7 @@ export default function FanZone() {
       {/* Forum */}
       <div style={{ marginTop:48 }}>
         <h2 style={{ fontFamily:"'Outfit',sans-serif", fontWeight:800, fontSize:'1.3rem', color:'var(--text)', marginBottom:20, display:'flex', alignItems:'center', gap:8 }}>💬 Fan Forum</h2>
-        <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:24 }}>
+        <div className="filter-scroll" style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:24 }}>
           {forumTags.map(t=>(
             <button key={t} onClick={()=>setForumTab(t)} style={{ padding:'7px 16px', borderRadius:99, cursor:'pointer', fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:'0.78rem', background:forumTab===t?'var(--primary)':'transparent', color:forumTab===t?'#0A1628':'var(--text-muted)', border:forumTab===t?'1.5px solid var(--primary)':'1.5px solid var(--border)', transition:'all 0.2s' }}>{t}</button>
           ))}

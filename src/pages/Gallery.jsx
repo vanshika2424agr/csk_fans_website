@@ -29,8 +29,8 @@ function LightBox({ photo, onClose, onPrev, onNext }) {
             <h3 style={{ fontFamily:"'Outfit',sans-serif", fontWeight:700, fontSize:'1.1rem', color:'#F1F5F9', lineHeight:1.4 }}>{photo.title}</h3>
           </div>
         </div>
-        <button onClick={onPrev} style={{ position:'absolute', left:-60, top:'50%', transform:'translateY(-50%)', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)', color:'#F1F5F9', cursor:'pointer', borderRadius:'50%', width:44, height:44, fontSize:'1.2rem', display:'flex', alignItems:'center', justifyContent:'center' }}>←</button>
-        <button onClick={onNext} style={{ position:'absolute', right:-60, top:'50%', transform:'translateY(-50%)', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)', color:'#F1F5F9', cursor:'pointer', borderRadius:'50%', width:44, height:44, fontSize:'1.2rem', display:'flex', alignItems:'center', justifyContent:'center' }}>→</button>
+        <button className="lightbox-nav-prev" onClick={onPrev} style={{ position:'absolute', left:-60, top:'50%', transform:'translateY(-50%)', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)', color:'#F1F5F9', cursor:'pointer', borderRadius:'50%', width:44, height:44, fontSize:'1.2rem', display:'flex', alignItems:'center', justifyContent:'center' }}>←</button>
+        <button className="lightbox-nav-next" onClick={onNext} style={{ position:'absolute', right:-60, top:'50%', transform:'translateY(-50%)', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.1)', color:'#F1F5F9', cursor:'pointer', borderRadius:'50%', width:44, height:44, fontSize:'1.2rem', display:'flex', alignItems:'center', justifyContent:'center' }}>→</button>
       </div>
     </div>
   );
@@ -52,7 +52,7 @@ export default function Gallery() {
         <h1 className="section-title" style={{ marginBottom:10 }}>Photo Gallery 📸</h1>
         <p className="section-subtitle">Relive the best CSK moments — from title celebrations to Chepauk magic.</p>
       </div>
-      <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:32 }}>
+      <div className="filter-scroll" style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:32 }}>
         {categories.map(c=>(
           <button key={c} onClick={()=>setCat(c)} style={{ padding:'8px 18px', borderRadius:99, cursor:'pointer', fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:'0.8rem', background:cat===c?'var(--primary)':'transparent', color:cat===c?'#0A1628':'var(--text-muted)', border:cat===c?'1.5px solid var(--primary)':'1.5px solid var(--border)', transition:'all 0.2s' }}>{c}</button>
         ))}
@@ -63,7 +63,7 @@ export default function Gallery() {
           {filtered.map((p,i)=>(
             <div key={p.id} className={`card anim-fade-up ${p.span==='wide'?'wide-span':''}`} onClick={()=>setLightbox(p)}
               style={{ overflow:'hidden', cursor:'pointer', gridColumn:p.span==='wide'?'span 2':'span 1', animationDelay:`${i*60}ms`, animationFillMode:'both' }}>
-              <div style={{ position:'relative', height:p.span==='wide'?280:220, overflow:'hidden' }}>
+              <div className={p.span==='wide'?'gallery-item-wide':'gallery-item'} style={{ position:'relative', height:p.span==='wide'?280:220, overflow:'hidden' }}>
                 <img src={p.src} alt={p.title} style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.5s' }}
                   onMouseEnter={e=>e.currentTarget.style.transform='scale(1.08)'}
                   onMouseLeave={e=>e.currentTarget.style.transform='scale(1)'} loading="lazy"/>

@@ -59,7 +59,7 @@ export default function Schedule() {
           return (
             <div key={m.id} className="card anim-fade-up" style={{ animationDelay:`${i*60}ms`, animationFillMode:'both', padding:0, overflow:'hidden' }}>
               <div style={{ height:3, background: m.status==='Upcoming'?'var(--gradient-primary)':m.win?'linear-gradient(90deg,#22c55e,#16a34a)':'linear-gradient(90deg,#ef4444,#dc2626)' }} />
-              <div style={{ padding:'20px 24px', display:'flex', flexWrap:'wrap', gap:16, alignItems:'center' }}>
+              <div className="match-card-layout" style={{ padding:'20px 24px', display:'flex', flexWrap:'wrap', gap:16, alignItems:'center' }}>
                 <div style={{ minWidth:90, textAlign:'center', flexShrink:0 }}>
                   <div style={{ fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.5rem', color:'var(--primary)', lineHeight:1 }}>{m.date}</div>
                   <div style={{ fontSize:'0.65rem', color:'var(--text-muted)', fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', marginTop:2 }}>{m.day}</div>

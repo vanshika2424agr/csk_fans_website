@@ -80,7 +80,7 @@ export default function Players() {
           <svg style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', color:'var(--text-muted)' }} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
           <input type="text" placeholder="Search player..." value={search} onChange={e=>setSearch(e.target.value)} className="input-field" style={{ paddingLeft:36 }}/>
         </div>
-        <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+        <div className="filter-scroll" style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
           {roles.map(r=>(
             <button key={r} onClick={()=>setFilter(r)} style={{ padding:'8px 16px', borderRadius:99, cursor:'pointer', fontFamily:"'Outfit',sans-serif", fontWeight:600, fontSize:'0.8rem', transition:'all 0.2s', background:filter===r?'var(--primary)':'transparent', color:filter===r?'#0A1628':'var(--text-secondary)', border:filter===r?'1.5px solid var(--primary)':'1.5px solid var(--border)', boxShadow:filter===r?'0 0 14px var(--primary-glow)':'none' }}>
               {r} <span style={{ opacity:0.7, fontSize:'0.72rem' }}>({r==='All'?players.length:players.filter(p=>p.role===r).length})</span>
