@@ -118,7 +118,7 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
-            <a href="#" className="btn-primary">🎟️ Buy Tickets</a>
+            <Link to="/schedule" className="btn-primary">🎟️ Buy Tickets</Link>
             <Link to="/schedule" className="btn-secondary">All Fixtures →</Link>
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function Home() {
           <p style={{ color:'var(--text-muted)', fontSize:'0.975rem', lineHeight:1.7, marginBottom:26, maxWidth:440, margin:'0 auto 26px' }}>Exclusive tickets, merchandise, player meet-and-greets and fan events. Be part of the CSK legacy.</p>
           <div style={{ display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap' }}>
             <Link to="/fanzone" className="btn-primary">🎉 Join Fan Zone</Link>
-            <a href="#" className="btn-secondary">🎟️ Season Tickets</a>
+            <Link to="/schedule" className="btn-secondary">🎟️ Season Tickets</Link>
             <Link to="/gallery" className="btn-secondary">📸 Gallery</Link>
           </div>
         </div>

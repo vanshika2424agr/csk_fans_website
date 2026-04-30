@@ -1,17 +1,6 @@
-import { useState } from 'react';
-
-const matches = [
-  { id:1, home:'CSK', away:'Mumbai Indians',     date:'Apr 12', day:'Saturday',  time:'7:30 PM', venue:'MA Chidambaram Stadium, Chennai',   status:'Completed', result:'CSK won by 42 runs',              win:true  },
-  { id:2, home:'Delhi Capitals', away:'CSK',      date:'Apr 15', day:'Tuesday',   time:'7:30 PM', venue:'Arun Jaitley Stadium, Delhi',       status:'Completed', result:'CSK won by 6 wickets',            win:true  },
-  { id:3, home:'CSK', away:'Kolkata Knight Riders',date:'Apr 18', day:'Friday',   time:'7:30 PM', venue:'MA Chidambaram Stadium, Chennai',   status:'Completed', result:'CSK won by 28 runs',              win:true  },
-  { id:4, home:'Rajasthan Royals', away:'CSK',    date:'Apr 21', day:'Monday',    time:'7:30 PM', venue:'Sawai Mansingh Stadium, Jaipur',    status:'Completed', result:'Rajasthan Royals won by 4 wickets',win:false },
-  { id:5, home:'CSK', away:'Sunrisers Hyderabad', date:'Apr 24', day:'Thursday',  time:'7:30 PM', venue:'MA Chidambaram Stadium, Chennai',   status:'Completed', result:'CSK won by 15 runs',              win:true  },
-  { id:6, home:'CSK', away:'Royal Challengers Bengaluru',date:'Apr 26',day:'Saturday',time:'7:30 PM',venue:'MA Chidambaram Stadium, Chennai', status:'Upcoming', result:null, win:null },
-  { id:7, home:'Punjab Kings', away:'CSK',        date:'May 1',  day:'Thursday',  time:'7:30 PM', venue:'IS Bindra Stadium, Mohali',         status:'Upcoming', result:null, win:null },
-  { id:8, home:'CSK', away:'Gujarat Titans',      date:'May 5',  day:'Monday',    time:'7:30 PM', venue:'MA Chidambaram Stadium, Chennai',   status:'Upcoming', result:null, win:null },
-  { id:9, home:'Lucknow Super Giants', away:'CSK',date:'May 10', day:'Saturday',  time:'3:30 PM', venue:'BRSABV Ekana Stadium, Lucknow',    status:'Upcoming', result:null, win:null },
-  { id:10,home:'CSK', away:'Mumbai Indians',      date:'May 14', day:'Wednesday', time:'7:30 PM', venue:'MA Chidambaram Stadium, Chennai',   status:'Upcoming', result:null, win:null },
-];
+import { useState, useEffect } from 'react';
+import { fetchMatches } from '../services/api';
+import BookingModal from '../components/BookingModal';
 
 const tabs = ['All','Upcoming','Completed'];
 const statusConfig = {
@@ -23,10 +12,50 @@ function getConfig(m) { if (m.status==='Completed') return m.win ? statusConfig.
 
 export default function Schedule() {
   const [tab, setTab] = useState('All');
+  const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [bookingMatch, setBookingMatch] = useState(null);
+
+  const loadMatches = async () => {
+    try {
+      const { data } = await fetchMatches();
+      setMatches(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { loadMatches(); }, []);
+
   const list = matches.filter(m => tab==='All' || m.status===tab);
   const wins = matches.filter(m => m.status==='Completed' && m.win).length;
   const losses = matches.filter(m => m.status==='Completed' && !m.win).length;
   const upcoming = matches.filter(m => m.status==='Upcoming').length;
+
+  if (loading) {
+    return (
+      <div style={{ maxWidth:1000, margin:'0 auto', padding:'80px 24px', textAlign:'center' }}>
+        <div className="booking-modal__spinner" style={{ width:36, height:36, margin:'0 auto' }} />
+        <p style={{ color:'var(--text-muted)', marginTop:16, fontFamily:"'Outfit',sans-serif" }}>Loading match schedule...</p>
+      </div>
+    );
+  }
+
+  if (error && matches.length === 0) {
+    return (
+      <div style={{ maxWidth:1000, margin:'0 auto', padding:'80px 24px', textAlign:'center' }}>
+        <div style={{ fontSize:'3rem', marginBottom:16 }}>⚠️</div>
+        <h2 style={{ fontFamily:"'Outfit',sans-serif", fontWeight:700, color:'var(--text)', marginBottom:8 }}>Failed to Load Matches</h2>
+        <p style={{ color:'var(--text-muted)', marginBottom:20 }}>{error}</p>
+        <button className="btn-primary" onClick={() => { setError(''); setLoading(true); loadMatches(); }}>
+          🔄 Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div style={{ maxWidth:1000, margin:'0 auto', padding:'60px 24px' }}>
@@ -57,7 +86,7 @@ export default function Schedule() {
           const isCSKHome = m.home==='CSK';
           const isCSKAway = m.away==='CSK';
           return (
-            <div key={m.id} className="card anim-fade-up" style={{ animationDelay:`${i*60}ms`, animationFillMode:'both', padding:0, overflow:'hidden' }}>
+            <div key={m._id} className="card anim-fade-up" style={{ animationDelay:`${i*60}ms`, animationFillMode:'both', padding:0, overflow:'hidden' }}>
               <div style={{ height:3, background: m.status==='Upcoming'?'var(--gradient-primary)':m.win?'linear-gradient(90deg,#22c55e,#16a34a)':'linear-gradient(90deg,#ef4444,#dc2626)' }} />
               <div className="match-card-layout" style={{ padding:'20px 24px', display:'flex', flexWrap:'wrap', gap:16, alignItems:'center' }}>
                 <div style={{ minWidth:90, textAlign:'center', flexShrink:0 }}>
@@ -65,7 +94,7 @@ export default function Schedule() {
                   <div style={{ fontSize:'0.65rem', color:'var(--text-muted)', fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', marginTop:2 }}>{m.day}</div>
                   <div style={{ fontSize:'0.72rem', color:'var(--text-secondary)', marginTop:4 }}>{m.time}</div>
                 </div>
-                <div style={{ width:1, height:60, background:'var(--border)', flexShrink:0 }} className="hidden sm:block" />
+                <div style={{ width:1, height:60, background:'var(--border)', flexShrink:0 }} />
                 <div style={{ flex:1, minWidth:200 }}>
                   <div style={{ display:'flex', alignItems:'center', gap:12, flexWrap:'wrap' }}>
                     <span style={{ fontFamily:"'Outfit',sans-serif", fontWeight:800, fontSize:'1.05rem', color:isCSKHome?'var(--primary)':'var(--text)' }}>{m.home==='CSK'?'🦁 CSK':m.home}</span>
@@ -77,18 +106,42 @@ export default function Schedule() {
                     {m.venue}
                   </div>
                   {m.result && <div style={{ marginTop:8, fontSize:'0.78rem', fontWeight:600, color:m.win?'var(--green)':'var(--red)' }}>{m.win?'✅':'❌'} {m.result}</div>}
+                  {m.status==='Upcoming' && (
+                    <div style={{ marginTop:8, fontSize:'0.72rem', color:'var(--text-muted)' }}>
+                      💺 {m.availableSeats.toLocaleString()} seats available · ₹{m.ticketPrice.toLocaleString()}/ticket
+                    </div>
+                  )}
                 </div>
                 <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:10, flexShrink:0 }}>
                   <div style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'5px 12px', borderRadius:99, fontSize:'0.68rem', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', background:cfg.bg, border:`1px solid ${cfg.border}`, color:cfg.color }}>
                     <span style={{ width:6, height:6, borderRadius:'50%', background:cfg.dot, display:'inline-block' }} />{cfg.label}
                   </div>
-                  {m.status==='Upcoming' && <button className="btn-primary" style={{ padding:'8px 18px', fontSize:'0.78rem' }}>🎟️ Tickets</button>}
+                  {m.status==='Upcoming' && m.availableSeats > 0 && (
+                    <button className="btn-primary" style={{ padding:'8px 18px', fontSize:'0.78rem' }} onClick={() => setBookingMatch(m)}>
+                      🎟️ Book Tickets
+                    </button>
+                  )}
+                  {m.status==='Upcoming' && m.availableSeats === 0 && (
+                    <span className="badge badge-red">Sold Out</span>
+                  )}
                 </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Booking Modal */}
+      {bookingMatch && (
+        <BookingModal
+          match={bookingMatch}
+          onClose={() => setBookingMatch(null)}
+          onSuccess={() => {
+            setBookingMatch(null);
+            loadMatches(); // Refresh match data to update available seats
+          }}
+        />
+      )}
     </div>
   );
 }
