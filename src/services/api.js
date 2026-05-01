@@ -1,9 +1,16 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// When running via `npm run dev`, the Vite proxy (vite.config.js) forwards
+// every /api/* request to http://localhost:5000 — no CORS issues in dev.
+//
+// When deployed (e.g. Vercel + Render) set VITE_API_URL to your backend URL
+// and the absolute URL is used instead.
+const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
-// ─── Helper ──────────────────────────────────
+// ─── Core fetch helper ────────────────────────────────────────────────────────
 async function request(endpoint, options = {}) {
-  const url = `${API_URL}${endpoint}`;
+  const url = `${API_BASE}${endpoint}`;
+
   const { headers: customHeaders, ...restOptions } = options;
+
   const config = {
     ...restOptions,
     headers: {
@@ -12,12 +19,28 @@ async function request(endpoint, options = {}) {
     },
   };
 
-  const res = await fetch(url, config);
-  const data = await res.json();
+  let res;
+  try {
+    res = await fetch(url, config);
+  } catch (networkErr) {
+    // This fires when the server is not running at all
+    throw new Error(
+      'Cannot reach the server. Make sure the backend is running on port 5000.'
+    );
+  }
+
+  // Try to parse JSON; if the response is not JSON, create a friendly error
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Server returned non-JSON response (${res.status})`);
+  }
 
   if (!res.ok) {
-    throw new Error(data.error || `Request failed (${res.status})`);
+    throw new Error(data?.error || `Request failed with status ${res.status}`);
   }
+
   return { data, status: res.status };
 }
 
@@ -25,7 +48,7 @@ function authHeaders(token) {
   return { Authorization: `Bearer ${token}` };
 }
 
-// ─── Auth ────────────────────────────────────
+// ─── Auth ─────────────────────────────────────────────────────────────────────
 export function loginUser(email, password) {
   return request('/api/auth/login', {
     method: 'POST',
@@ -46,7 +69,7 @@ export function getMe(token) {
   });
 }
 
-// ─── Matches ─────────────────────────────────
+// ─── Matches ──────────────────────────────────────────────────────────────────
 export function fetchMatches() {
   return request('/api/matches');
 }
@@ -55,12 +78,12 @@ export function fetchMatch(id) {
   return request(`/api/matches/${id}`);
 }
 
-// ─── Bookings ────────────────────────────────
+// ─── Bookings ─────────────────────────────────────────────────────────────────
 export function createBooking(token, matchId, ticketsCount) {
   return request('/api/bookings', {
     method: 'POST',
     headers: authHeaders(token),
-    body: JSON.stringify({ matchId, ticketsCount }),
+    body: JSON.stringify({ matchId, ticketsCount: Number(ticketsCount) }),
   });
 }
 

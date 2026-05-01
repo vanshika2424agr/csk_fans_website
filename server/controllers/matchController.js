@@ -4,8 +4,10 @@ import Match from '../models/Match.js';
 export async function getAllMatches(_req, res) {
   try {
     const matches = await Match.find().sort({ createdAt: 1 });
+    console.log(`[getAllMatches] returning ${matches.length} matches`);
     res.json(matches);
   } catch (err) {
+    console.error('[getAllMatches] error:', err.message);
     res.status(500).json({ error: err.message || 'Failed to fetch matches.' });
   }
 }

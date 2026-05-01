@@ -1,99 +1,89 @@
 import Booking from '../models/Booking.js';
-import Match from '../models/Match.js';
+import Match   from '../models/Match.js';
 
-// POST /api/bookings
+// ─── POST /api/bookings ────────────────────────────────────────────────────────
 export async function createBooking(req, res) {
   try {
-    if (!req.body) {
-      return res.status(400).json({ success: false, error: 'Request body is empty. Send JSON with Content-Type header.' });
-    }
+    console.log('[createBooking] user:', req.user?._id, '| body:', req.body);
+
     const { matchId, ticketsCount } = req.body;
 
-    // Validate input
     if (!matchId || !ticketsCount) {
-      return res.status(400).json({ success: false, error: 'Match ID and ticket count are required.' });
-    }
-    if (ticketsCount < 1 || ticketsCount > 10) {
-      return res.status(400).json({ success: false, error: 'You can book between 1 and 10 tickets.' });
+      return res.status(400).json({ success: false, error: 'matchId and ticketsCount are required.' });
     }
 
-    // Find the match
+    const count = Number(ticketsCount);
+    if (isNaN(count) || count < 1 || count > 10) {
+      return res.status(400).json({ success: false, error: 'ticketsCount must be between 1 and 10.' });
+    }
+
     const match = await Match.findById(matchId);
     if (!match) {
+      console.log('[createBooking] match not found:', matchId);
       return res.status(404).json({ success: false, error: 'Match not found.' });
     }
 
-    // Only allow booking for upcoming matches
     if (match.status !== 'Upcoming') {
       return res.status(400).json({ success: false, error: 'Tickets can only be booked for upcoming matches.' });
     }
 
-    // Check seat availability
-    if (ticketsCount > match.availableSeats) {
+    if (count > match.availableSeats) {
       return res.status(400).json({
         success: false,
-        error: `Only ${match.availableSeats} seats available. You requested ${ticketsCount}.`,
+        error: `Only ${match.availableSeats} seats available. You requested ${count}.`,
       });
     }
 
-    // Calculate total
-    const totalAmount = ticketsCount * match.ticketPrice;
-    const matchName = `${match.home} vs ${match.away}`;
+    const totalAmount = count * match.ticketPrice;
+    const matchName   = `${match.home} vs ${match.away}`;
 
-    // Create booking (bookingId auto-generated)
     const booking = await Booking.create({
-      userId: req.user._id,
+      userId:       req.user._id,
       matchId,
       matchName,
-      ticketsCount,
+      ticketsCount: count,
       totalAmount,
     });
 
-    // Decrement available seats
-    match.availableSeats -= ticketsCount;
+    // Reduce available seats atomically
+    match.availableSeats -= count;
     await match.save();
 
-    // Populate match details before returning
-    await booking.populate({
-      path: 'matchId',
-      select: 'home away date day time venue status ticketPrice availableSeats',
-    });
+    console.log('[createBooking] success — bookingId:', booking.bookingId);
 
     res.status(201).json({
-      success: true,
+      success:   true,
       bookingId: booking.bookingId,
-      message: `Booking confirmed! Your ID: ${booking.bookingId}`,
+      message:   `Booking confirmed! Your ID: ${booking.bookingId}`,
       booking,
     });
   } catch (err) {
+    console.error('[createBooking] error:', err.message);
     if (err.name === 'CastError') {
-      return res.status(400).json({ success: false, error: 'Invalid match ID.' });
+      return res.status(400).json({ success: false, error: 'Invalid match ID format.' });
     }
     res.status(500).json({ success: false, error: err.message || 'Booking failed.' });
   }
 }
 
-// GET /api/bookings/my
+// ─── GET /api/bookings/my ─────────────────────────────────────────────────────
 export async function getMyBookings(req, res) {
   try {
-    const bookings = await Booking.find({ userId: req.user._id })
-      .sort({ createdAt: -1 });
-
+    const bookings = await Booking.find({ userId: req.user._id }).sort({ createdAt: -1 });
     res.json(bookings);
   } catch (err) {
+    console.error('[getMyBookings] error:', err.message);
     res.status(500).json({ error: err.message || 'Failed to fetch bookings.' });
   }
 }
 
-// GET /api/bookings (all — for testing)
+// ─── GET /api/bookings/all ────────────────────────────────────────────────────
 export async function getAllBookings(_req, res) {
   try {
-    const bookings = await Booking.find()
-      .sort({ createdAt: -1 })
-      .limit(100);
-
+    const bookings = await Booking.find().sort({ createdAt: -1 }).limit(100);
     res.json(bookings);
   } catch (err) {
+    console.error('[getAllBookings] error:', err.message);
     res.status(500).json({ error: err.message || 'Failed to fetch bookings.' });
   }
 }

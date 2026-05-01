@@ -1,6 +1,13 @@
-import 'dotenv/config';
+import { fileURLToPath } from 'url';
+import path from 'path';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+import dotenv from 'dotenv';
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
 import mongoose from 'mongoose';
 import Match from './models/Match.js';
+
 
 const matches = [
   {
